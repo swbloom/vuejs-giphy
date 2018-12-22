@@ -1,17 +1,42 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Giphy App</h1>
+    <input
+      v-model="keyword"
+      @input="search"
+    />
+    <div>
+      <img
+        v-for="gif in gifs"
+        :src="gif.images.fixed_height.url"
+        :key="gif.slug"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import client from './client'
 
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  components: {},
+  data () {
+    return {
+      gifs: [],
+      keyword: ''
+    }
+  },
+  methods: {
+    async search () {
+      console.log('search')
+      try {
+        const res = await client.search(this.keyword)
+        this.gifs = res.data
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 }
 </script>
